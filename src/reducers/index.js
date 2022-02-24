@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import searchReducer from './searchReducer';
-// import { SEARCH } from '../actions';
-// import axios from 'axios';
+import keyDownReducer from './keyDownReducer';
 
 const rootReducer = combineReducers({
   searchReducer,
+  keyDownReducer,
 });
 
 export default rootReducer;

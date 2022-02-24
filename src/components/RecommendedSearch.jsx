@@ -1,7 +1,7 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { IoIosSearch } from 'react-icons/io';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
 
 const Recommend = styled.p`
   font-size: 12px;
@@ -35,20 +35,24 @@ const SearchResultList = styled.div`
 `;
 
 function RecommendedSearch() {
-  const state = useSelector(state => state.searchReducer);
+  const { items } = useSelector(state => state.searchReducer);
 
   return (
-    <SearchResultList>
-      {state.items?.length === 0 ? null : <Recommend>추천 검색어</Recommend>}
-      <ul>
-        {state.items?.map((item, index) => (
-          <li key={index}>
-            <IoIosSearch color="black" size="20px" />
-            <span>{item.name}</span>
-          </li>
-        ))}
-      </ul>
-    </SearchResultList>
+    <>
+      {items.length === 0 ? null : (
+        <SearchResultList>
+          <Recommend>추천 검색어</Recommend>
+          <ul>
+            {items.map((item, index) => (
+              <li key={index}>
+                <IoIosSearch color="black" size="20px" />
+                <span>{item.name}</span>
+              </li>
+            ))}
+          </ul>
+        </SearchResultList>
+      )}
+    </>
   );
 }
 

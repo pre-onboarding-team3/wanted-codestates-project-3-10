@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { IoIosSearch } from 'react-icons/io';
-import { search } from '../actions/index';
-import { useDispatch } from 'react-redux';
+import { search, keyDown } from '../actions/index';
+import { useSelector, useDispatch } from 'react-redux';
 import RecommendedSearch from '../components/RecommendedSearch';
 import axios from 'axios';
 
@@ -10,25 +10,25 @@ const API =
   'https://api.clinicaltrialskorea.com/api/v1/search-conditions/?name=';
 
 const Main = () => {
-  const [focusInput, setFocusInput] = useState(false);
-  const [searchWord, setSearchWord] = useState('');
+  const { keyword } = useSelector(state => state.keyDownReducer);
   const dispatch = useDispatch();
-  const input = useRef();
 
   const writeSearchWord = async e => {
-    // action type 따라 분기를 나눈다.
     // 캐시가 있을 때, 캐시 사용
+    if (sessionStorage.getItem(e.target.value)) {
+      dispatch(search(JSON.parse(sessionStorage.getItem(e.target.value))));
+    }
     // 없을 때 axios API 호출 => 세션 스토리 저장
-    if(sessionStorage.getItem(e.target.value)){
-      dispatch(search(JSON.parse(sessionStorage.getItem(e.target.value))))
-    }
     else if (e.target.value) {
-        const URL = API + e.target.value;
-        const items = await axios.get(URL);
-        sessionStorage.setItem(e.target.value, JSON.stringify(items.data.slice(0, 7)))
-        dispatch(search(items.data.slice(0, 7)));
+      const URL = API + e.target.value;
+      const items = await axios.get(URL);
+      sessionStorage.setItem(
+        e.target.value,
+        JSON.stringify(items.data.slice(0, 7)),
+      );
+      dispatch(search(items.data.slice(0, 7)));
     }
-    setSearchWord(input.current.value);
+    dispatch(keyDown(e.target.value));
   };
 
   const pressEnter = e => {
@@ -38,9 +38,9 @@ const Main = () => {
   };
 
   const searchClick = () => {
-    if (searchWord == null) return;
+    if (!keyword) return;
     location.replace(
-      `https://clinicaltrialskorea.com/studies?condition=${searchWord}`,
+      `https://clinicaltrialskorea.com/studies?condition=${keyword}`,
     );
   };
 
@@ -53,18 +53,15 @@ const Main = () => {
         <div>
           <IoIosSearch color="#000" size="23px" />
           <input
-            ref={input}
             onChange={writeSearchWord}
             type="text"
-            onFocus={() => setFocusInput(true)}
-            onBlur={() => setFocusInput(false)}
             onKeyPress={pressEnter}
             placeholder="질환명을 입력해 주세요."
           />
         </div>
         <button onClick={searchClick}>검색</button>
       </Search>
-      {focusInput ? <RecommendedSearch /> : null}
+      <RecommendedSearch />
     </MainStyle>
   );
 };
