@@ -1,6 +1,7 @@
 import React from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 
 const Recommend = styled.p`
   font-size: 12px;
@@ -33,17 +34,17 @@ const SearchResultList = styled.div`
   }
 `;
 
-const data = ['암', '건강', '세포', '임상', '염증', '복통'];
-
 function RecommendedSearch() {
+  const state = useSelector(state => state.searchReducer);
+
   return (
     <SearchResultList>
-      {data.length === 0 ? null : <Recommend>추천 검색어</Recommend>}
+      {state.items?.length === 0 ? null : <Recommend>추천 검색어</Recommend>}
       <ul>
-        {data.map((value, index) => (
+        {state.items?.map((item, index) => (
           <li key={index}>
             <IoIosSearch color="black" size="20px" />
-            <span>{value}</span>
+            <span>{item.name}</span>
           </li>
         ))}
       </ul>
