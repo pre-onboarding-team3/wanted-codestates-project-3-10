@@ -36,12 +36,13 @@ const SearchResultList = styled.div`
 
 function RecommendedSearch() {
   const { items } = useSelector(state => state.searchReducer);
+  const { keyword } = useSelector(state => state.keyDownReducer);
 
   return (
     <>
-      {items.length === 0 ? null : (
+      {items.length === 0 || keyword === '' ? null : (
         <SearchResultList>
-          <Recommend>추천 검색어</Recommend>
+          {<Recommend>추천 검색어</Recommend>}
           <ul>
             {items.map((item, index) => (
               <li key={index}>
