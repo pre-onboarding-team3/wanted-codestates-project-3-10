@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IoIosSearch } from 'react-icons/io';
-import { search, keyDonw } from '../actions/index';
+import { search, keyDown } from '../actions/index';
 import { useSelector, useDispatch } from 'react-redux';
 import RecommendedSearch from '../components/RecommendedSearch';
 import axios from 'axios';
@@ -12,22 +12,23 @@ const API =
 const Main = () => {
   const { keyword } = useSelector(state => state.keyDownReducer);
   const dispatch = useDispatch();
-  console.log(keyword);
 
   const writeSearchWord = async e => {
-    // action type 따라 분기를 나눈다.
     // 캐시가 있을 때, 캐시 사용
+    if (sessionStorage.getItem(e.target.value)) {
+      dispatch(search(JSON.parse(sessionStorage.getItem(e.target.value))));
+    }
     // 없을 때 axios API 호출 => 세션 스토리 저장
-    if(sessionStorage.getItem(e.target.value)){
-      dispatch(search(JSON.parse(sessionStorage.getItem(e.target.value))))
-    }
     else if (e.target.value) {
-        const URL = API + e.target.value;
-        const items = await axios.get(URL);
-        sessionStorage.setItem(e.target.value, JSON.stringify(items.data.slice(0, 7)))
-        dispatch(search(items.data.slice(0, 7)));
+      const URL = API + e.target.value;
+      const items = await axios.get(URL);
+      sessionStorage.setItem(
+        e.target.value,
+        JSON.stringify(items.data.slice(0, 7)),
+      );
+      dispatch(search(items.data.slice(0, 7)));
     }
-    dispatch(keyDonw(e.target.value));
+    dispatch(keyDown(e.target.value));
   };
 
   const pressEnter = e => {
@@ -37,7 +38,7 @@ const Main = () => {
   };
 
   const searchClick = () => {
-    if (keyword) return;
+    if (!keyword) return;
     location.replace(
       `https://clinicaltrialskorea.com/studies?condition=${keyword}`,
     );
