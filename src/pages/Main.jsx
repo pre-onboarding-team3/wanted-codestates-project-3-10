@@ -18,10 +18,14 @@ const Main = () => {
     // action type 따라 분기를 나눈다.
     // 캐시가 있을 때, 캐시 사용
     // 없을 때 axios API 호출 => 세션 스토리 저장
-    if (e.target.value) {
-      const URL = API + e.target.value;
-      const items = await axios.get(URL);
-      dispatch(search(items.data.slice(0, 7)));
+    if(sessionStorage.getItem(e.target.value)){
+      dispatch(search(JSON.parse(sessionStorage.getItem(e.target.value))))
+    }
+    else if (e.target.value) {
+        const URL = API + e.target.value;
+        const items = await axios.get(URL);
+        sessionStorage.setItem(e.target.value, JSON.stringify(items.data.slice(0, 7)))
+        dispatch(search(items.data.slice(0, 7)));
     }
     dispatch(keyDonw(e.target.value));
   };
