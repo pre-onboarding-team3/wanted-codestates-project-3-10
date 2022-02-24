@@ -42,7 +42,7 @@ function RecommendedSearch() {
     <>
       {items.length === 0 || keyword === '' ? null : (
         <SearchResultList>
-          {<Recommend>추천 검색어</Recommend>}
+          <Recommend>추천 검색어</Recommend>
           <ul>
             {items.map((item, index) => (
               <li key={index}>
