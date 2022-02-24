@@ -11,19 +11,17 @@ const API =
 const Main = () => {
   const state = useSelector(state => state.searchReducer);
   const dispatch = useDispatch();
-  console.log(state);
 
   const [searchWord, setSearchWord] = useState('');
   const input = useRef();
 
-  const writeSearchWord = e => {
+  const writeSearchWord = async e => {
     // action type 따라 분기를 나눈다.
     // 캐시가 있을 때, 캐시 사용
     // 없을 때 axios API 호출 => 세션 스토리 저장
     const URL = API + e.target.value;
-    // axios.get(URL).then(data => {
-    //   dispatch(search(data.data));
-    // });
+    const items = await axios.get(URL);
+    dispatch(search(items.data));
 
     setSearchWord(input.current.value);
   };

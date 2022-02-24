@@ -1,8 +1,9 @@
 import { SEARCH } from '../actions';
 
-const searchReducer = async (state = {}, action) => {
+const searchReducer = (state = {}, action) => {
   switch (action.type) {
     case SEARCH: {
+      console.log(action.payload.items);
       return {
         items: action.payload.items,
       };
