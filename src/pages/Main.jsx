@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { IoIosSearch } from 'react-icons/io';
+import RecommendedSearch from '../components/RecommendedSearch';
 
 const Main = () => {
   const [searchWord, setSearchWord] = useState('');
@@ -40,6 +41,7 @@ const Main = () => {
         </div>
         <button onClick={searchClick}>검색</button>
       </Search>
+      <RecommendedSearch />
     </MainStyle>
   );
 };
