@@ -26,6 +26,9 @@ const SearchResultList = styled.div`
       span {
         margin-left: 10px;
       }
+      :last-child {
+        padding: 10px 0 0;
+      }
     }
   }
 `;
@@ -35,7 +38,7 @@ const data = ['암', '건강', '세포', '임상', '염증', '복통'];
 function RecommendedSearch() {
   return (
     <SearchResultList>
-      <Recommend>추천 검색어</Recommend>
+      {data.length === 0 ? null : <Recommend>추천 검색어</Recommend>}
       <ul>
         {data.map((value, index) => (
           <li key={index}>

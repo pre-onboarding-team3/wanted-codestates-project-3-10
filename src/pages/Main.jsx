@@ -4,6 +4,7 @@ import { IoIosSearch } from 'react-icons/io';
 import RecommendedSearch from '../components/RecommendedSearch';
 
 const Main = () => {
+  const [focusInput, setFocusInput] = useState(false);
   const [searchWord, setSearchWord] = useState('');
   const input = useRef();
 
@@ -35,13 +36,15 @@ const Main = () => {
             ref={input}
             onChange={writeSearchWord}
             type="text"
+            onFocus={() => setFocusInput(true)}
+            onBlur={() => setFocusInput(false)}
             onKeyPress={pressEnter}
             placeholder="질환명을 입력해 주세요."
           />
         </div>
         <button onClick={searchClick}>검색</button>
       </Search>
-      <RecommendedSearch />
+      {focusInput ? <RecommendedSearch /> : null}
     </MainStyle>
   );
 };
