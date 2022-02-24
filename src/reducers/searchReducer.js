@@ -1,10 +1,11 @@
 import { SEARCH } from '../actions';
+import { initialState } from './initialState';
 
-const searchReducer = (state = {}, action) => {
+const searchReducer = (state = initialState, action) => {
   switch (action.type) {
     case SEARCH: {
-      console.log(action.payload.items);
       return {
+        ...state,
         items: action.payload.items,
       };
     }
