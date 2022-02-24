@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import { IoIosSearch } from 'react-icons/io';
 import { search } from '../actions/index';
 import { useDispatch } from 'react-redux';
-
-import axios from 'axios';
 import RecommendedSearch from '../components/RecommendedSearch';
+import axios from 'axios';
 
 const API =
   'https://api.clinicaltrialskorea.com/api/v1/search-conditions/?name=';
@@ -20,10 +19,11 @@ const Main = () => {
     // action type 따라 분기를 나눈다.
     // 캐시가 있을 때, 캐시 사용
     // 없을 때 axios API 호출 => 세션 스토리 저장
-    const URL = API + e.target.value;
-    const items = await axios.get(URL);
-    dispatch(search(items.data));
-
+    if (e.target.value) {
+      const URL = API + e.target.value;
+      const items = await axios.get(URL);
+      dispatch(search(items.data.slice(0, 7)));
+    }
     setSearchWord(input.current.value);
   };
 
