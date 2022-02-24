@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IoIosSearch } from 'react-icons/io';
-import { search } from '../actions/index';
+import { search, keyDonw } from '../actions/index';
 import { useSelector, useDispatch } from 'react-redux';
 import RecommendedSearch from '../components/RecommendedSearch';
 import axios from 'axios';
@@ -12,6 +12,7 @@ const API =
 const Main = () => {
   const { keyword } = useSelector(state => state.keyDownReducer);
   const dispatch = useDispatch();
+  console.log(keyword);
 
   const writeSearchWord = async e => {
     // action type 따라 분기를 나눈다.
@@ -22,6 +23,7 @@ const Main = () => {
       const items = await axios.get(URL);
       dispatch(search(items.data.slice(0, 7)));
     }
+    dispatch(keyDonw(e.target.value));
   };
 
   const pressEnter = e => {

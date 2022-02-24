@@ -6,7 +6,7 @@ const keyDownReducer = (state = initialState, action) => {
     case KEY_DOWN: {
       return {
         ...state,
-        keyword: '',
+        keyword: action.payload.keyword,
       };
     }
     default:
