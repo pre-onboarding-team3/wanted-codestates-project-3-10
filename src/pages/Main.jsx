@@ -1,12 +1,30 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { IoIosSearch } from 'react-icons/io';
+import { search } from '../actions/index';
+import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
+
+const API =
+  'https://api.clinicaltrialskorea.com/api/v1/search-conditions/?name=';
 
 const Main = () => {
+  const state = useSelector(state => state.searchReducer);
+  const dispatch = useDispatch();
+  console.log(state);
+
   const [searchWord, setSearchWord] = useState('');
   const input = useRef();
 
-  const writeSearchWord = () => {
+  const writeSearchWord = e => {
+    // action type 따라 분기를 나눈다.
+    // 캐시가 있을 때, 캐시 사용
+    // 없을 때 axios API 호출 => 세션 스토리 저장
+    const URL = API + e.target.value;
+    // axios.get(URL).then(data => {
+    //   dispatch(search(data.data));
+    // });
+
     setSearchWord(input.current.value);
   };
 
@@ -22,6 +40,7 @@ const Main = () => {
       `https://clinicaltrialskorea.com/studies?condition=${searchWord}`,
     );
   };
+
   return (
     <MainStyle>
       <p>
