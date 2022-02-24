@@ -25,9 +25,9 @@ const Main = () => {
   };
   return (
     <MainStyle>
-      <p>
+      <Text>
         국내 모든 임상시험 검색하고 <br /> 온라인으로 참여하기
-      </p>
+      </Text>
       <Search>
         <div>
           <IoIosSearch color="#000" size="23px" />
@@ -50,20 +50,21 @@ const MainStyle = styled.div`
   width: 100vw;
   height: 100vh;
   background: #cae9ff;
-  p {
-    margin-bottom: 20px;
-    padding-top: 20%;
-    text-align: center;
-    font-size: 2.1rem;
-    font-weight: bold;
-    line-height: 1.6;
-  }
+`;
+
+const Text = styled.p`
+  margin-bottom: 20px;
+  padding-top: 10%;
+  text-align: center;
+  font-size: 2.1rem;
+  font-weight: bold;
+  line-height: 1.6;
 `;
 
 const Search = styled.div`
   display: flex;
-  width: 660px;
-  margin: auto;
+  max-width: 700px;
+  margin: 0 auto 10px;
   border-radius: 42px;
   overflow: hidden;
   svg {

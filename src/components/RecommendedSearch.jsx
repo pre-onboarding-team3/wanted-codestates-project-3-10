@@ -14,6 +14,7 @@ const SearchResultList = styled.div`
   max-width: 700px;
   border-radius: 20px;
   padding: 20px;
+  margin: auto;
   box-sizing: border-box;
   font-size: 16px;
   ul {
@@ -33,19 +34,17 @@ const data = ['암', '건강', '세포', '임상', '염증', '복통'];
 
 function RecommendedSearch() {
   return (
-    <div>
-      <SearchResultList>
-        <Recommend>추천 검색어</Recommend>
-        <ul>
-          {data.map((value, index) => (
-            <li key={index}>
-              <IoIosSearch color="black" size="20px" />
-              <span>{value}</span>
-            </li>
-          ))}
-        </ul>
-      </SearchResultList>
-    </div>
+    <SearchResultList>
+      <Recommend>추천 검색어</Recommend>
+      <ul>
+        {data.map((value, index) => (
+          <li key={index}>
+            <IoIosSearch color="black" size="20px" />
+            <span>{value}</span>
+          </li>
+        ))}
+      </ul>
+    </SearchResultList>
   );
 }
 
