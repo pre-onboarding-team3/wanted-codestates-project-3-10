@@ -10,7 +10,7 @@ export const search = items => {
   };
 };
 
-export const keyDonw = keyword => {
+export const keyDown = keyword => {
   return {
     type: KEY_DOWN,
     payload: {
