@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { IoIosSearch } from 'react-icons/io';
 import { search } from '../actions/index';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import RecommendedSearch from '../components/RecommendedSearch';
 import axios from 'axios';
 
@@ -10,10 +10,8 @@ const API =
   'https://api.clinicaltrialskorea.com/api/v1/search-conditions/?name=';
 
 const Main = () => {
-  const [focusInput, setFocusInput] = useState(false);
-  const [searchWord, setSearchWord] = useState('');
+  const { keyword } = useSelector(state => state.keyDownReducer);
   const dispatch = useDispatch();
-  const input = useRef();
 
   const writeSearchWord = async e => {
     // action type 따라 분기를 나눈다.
@@ -24,7 +22,6 @@ const Main = () => {
       const items = await axios.get(URL);
       dispatch(search(items.data.slice(0, 7)));
     }
-    setSearchWord(input.current.value);
   };
 
   const pressEnter = e => {
@@ -34,9 +31,9 @@ const Main = () => {
   };
 
   const searchClick = () => {
-    if (searchWord == null) return;
+    if (keyword) return;
     location.replace(
-      `https://clinicaltrialskorea.com/studies?condition=${searchWord}`,
+      `https://clinicaltrialskorea.com/studies?condition=${keyword}`,
     );
   };
 
@@ -49,18 +46,15 @@ const Main = () => {
         <div>
           <IoIosSearch color="#000" size="23px" />
           <input
-            ref={input}
             onChange={writeSearchWord}
             type="text"
-            onFocus={() => setFocusInput(true)}
-            onBlur={() => setFocusInput(false)}
             onKeyPress={pressEnter}
             placeholder="질환명을 입력해 주세요."
           />
         </div>
         <button onClick={searchClick}>검색</button>
       </Search>
-      {focusInput ? <RecommendedSearch /> : null}
+      <RecommendedSearch />
     </MainStyle>
   );
 };
