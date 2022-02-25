@@ -9,6 +9,7 @@ import axios from 'axios';
 const Main = () => {
   const { keyword } = useSelector(state => state.keyDownReducer);
   const { REACT_APP_SEARCH_API } = process.env;
+  const [selected, setSelected] = useState(-1);
   const dispatch = useDispatch();
 
   const [handleLoading, setHandleLoading] = useState(false);
@@ -51,9 +52,13 @@ const Main = () => {
     };
   };
 
-  const pressEnter = e => {
-    if (e.key === 'Enter') {
+  const pressKey = ({ key }) => {
+    if (key === 'Enter') {
       searchClick();
+    } else if (key === 'ArrowDown') {
+      setSelected((selected + 1) % 7);
+    } else if (key === 'ArrowUp') {
+      setSelected(selected - 1 >= 0 ? (selected - 1) % 7 : selected + 6);
     }
   };
 
@@ -73,16 +78,15 @@ const Main = () => {
         <div>
           <IoIosSearch color="#000" size="23px" />
           <input
-            onChange={debounce(writeSearchWord, 800)}
-            // onChange={writeSearchWord}
+            onChange={debounce(writeSearchWord, 400)}
             type="text"
-            onKeyPress={pressEnter}
+            onKeyDown={pressKey}
             placeholder="질환명을 입력해 주세요."
           />
         </div>
         <button onClick={searchClick}>검색</button>
       </Search>
-      <RecommendedSearch handleLoading={handleLoading} />
+      <RecommendedSearch selected={selected} handleLoading={handleLoading}/>
     </MainStyle>
   );
 };

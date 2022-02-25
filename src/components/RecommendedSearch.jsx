@@ -25,17 +25,20 @@ const SearchResultList = styled.div`
       align-items: center;
       font-weight: bold;
       padding: 10px 0;
+
+      &.selected {
+        background-color: #ddd;
+      }
+
       span {
         margin-left: 10px;
-      }
-      :last-child {
-        padding: 10px 0 0;
       }
     }
   }
 `;
 
-function RecommendedSearch({ handleLoading }) {
+
+function RecommendedSearch({ selected, handleLoading }) {
   const { items } = useSelector(state => state.searchReducer);
 
   return (
@@ -49,7 +52,11 @@ function RecommendedSearch({ handleLoading }) {
           <Recommend>추천 검색어</Recommend>
           <ul>
             {items.map((item, index) => (
-              <li key={index}>
+              <li
+                key={index}
+                className={index === selected ? 'selected' : ''}
+                tabIndex="0"
+              >
                 <IoIosSearch color="black" size="20px" />
                 <span>{item.name}</span>
               </li>
@@ -63,6 +70,7 @@ function RecommendedSearch({ handleLoading }) {
 
 RecommendedSearch.propTypes = {
   handleLoading: PropTypes.bool,
+  selected: PropTypes.number,
 };
 
 export default RecommendedSearch;
