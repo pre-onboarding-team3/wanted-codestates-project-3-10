@@ -25,21 +25,24 @@ const SearchResultList = styled.div`
       align-items: center;
       font-weight: bold;
       padding: 10px 0;
-      span {
-        margin-left: 10px;
+
+      &.selected {
+        background-color: #ddd;
       }
-      :last-child {
-        padding: 10px 0;
-      }
+
       :hover {
         cursor: pointer;
         background-color: #eee;
       }
-    }    
+
+      span {
+        margin-left: 10px;
+      }
+    }
   }
 `;
 
-const RecommendedSearch = ({ selected }) => {
+function RecommendedSearch({ selected }) {
   const { items } = useSelector(state => state.searchReducer);
   console.log(items)
   console.log(selected)
@@ -55,7 +58,11 @@ const RecommendedSearch = ({ selected }) => {
           <Recommend>추천 검색어</Recommend>
           <ul>
             {items.map((item, index) => (
-              <li key={index} onClick={clickKeyword}>
+              <li
+                key={index}
+                className={index === selected ? 'selected' : ''}
+                onClick={clickKeyword}
+              >
                 <IoIosSearch color="black" size="20px" />
                 <span>{item.name}</span>
               </li>
@@ -67,8 +74,8 @@ const RecommendedSearch = ({ selected }) => {
   );
 }
 
-RecommendedSearch.prototype = {
+RecommendedSearch.propTypes = {
   selected: PropTypes.number,
-}
+};
 
 export default RecommendedSearch;

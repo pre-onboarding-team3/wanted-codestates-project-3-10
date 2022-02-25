@@ -6,14 +6,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import RecommendedSearch from '../components/RecommendedSearch';
 import axios from 'axios';
 
-const API =
-  'https://api.clinicaltrialskorea.com/api/v1/search-conditions/?name=';
-
 const Main = () => {
   const { keyword } = useSelector(state => state.keyDownReducer);
-  // const { items } = useSelector(state => state.searchReducer);
+  const { items } = useSelector(state => state.searchReducer);
   const inputRef = useRef();
-  const [currentIdx, setCurrentIdx] = useState(-1);
+  const { REACT_APP_SEARCH_API } = process.env;
+  const [selected, setSelected] = useState(-1);
   const dispatch = useDispatch();
 
   const writeSearchWord = async e => {
@@ -28,7 +26,7 @@ const Main = () => {
     }
     // 없을 때 axios API 호출 => 세션 스토리 저장
     else if (value) {
-      const URL = API + value;
+      const URL = REACT_APP_SEARCH_API + value;
       const items = await axios.get(URL);
       sessionStorage.setItem(value, JSON.stringify(items.data.slice(0, 7)));
       dispatch(search(items.data.slice(0, 7)));
@@ -49,9 +47,13 @@ const Main = () => {
     };
   };
 
-  const pressEnter = e => {
-    if (e.key === 'Enter') {
+  const pressKey = ({ key }) => {
+    if (key === 'Enter') {
       searchClick();
+    } else if (key === 'ArrowDown') {
+      setSelected((selected + 1) % 7);
+    } else if (key === 'ArrowUp') {
+      setSelected(selected - 1 >= 0 ? (selected - 1) % 7 : selected + 6);
     }
   };
 
@@ -74,7 +76,7 @@ const Main = () => {
             onChange={debounce(writeSearchWord, 400)}
             ref={inputRef}
             type="text"
-            onKeyPress={pressEnter}
+            onKeyDown={pressKey}
             placeholder="질환명을 입력해 주세요."
           />
         </div>
