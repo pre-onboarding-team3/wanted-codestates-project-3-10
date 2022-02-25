@@ -14,21 +14,28 @@ const Main = () => {
   const dispatch = useDispatch();
 
   const writeSearchWord = async e => {
+    //Todo : value에 공백이 추가된것도 같게본다. ex) '공   '와 '공' 전부
+    const value = e.target.value.replace(/\s+$/gm,'')
+    if(value === ''){
+      dispatch(search([]))
+    }
     // 캐시가 있을 때, 캐시 사용
-    if (sessionStorage.getItem(e.target.value)) {
-      dispatch(search(JSON.parse(sessionStorage.getItem(e.target.value))));
+    else if (sessionStorage.getItem(value)) {
+      console.log('캐시 호출',value)
+      dispatch(search(JSON.parse(sessionStorage.getItem(value))));
     }
     // 없을 때 axios API 호출 => 세션 스토리 저장
-    else if (e.target.value) {
-      const URL = API + e.target.value;
+    else if (value) {
+      console.log('axios API 호출',value)
+      const URL = API + value;
       const items = await axios.get(URL);
       sessionStorage.setItem(
-        e.target.value,
+        value,
         JSON.stringify(items.data.slice(0, 7)),
       );
       dispatch(search(items.data.slice(0, 7)));
     }
-    dispatch(keyDown(e.target.value));
+    dispatch(keyDown(value));
   };
 
   const pressEnter = e => {
