@@ -12,6 +12,8 @@ const Main = () => {
   const [selected, setSelected] = useState(-1);
   const dispatch = useDispatch();
 
+  const [handleLoading, setHandleLoading] = useState(false);
+
   const writeSearchWord = async e => {
     //Todo : value에 공백이 추가된것도 같게본다. ex) '공   '와 '공' 전부
     const value = e.target.value.replace(/\s+$/gm, '');
@@ -38,10 +40,15 @@ const Main = () => {
     let timer;
     return (...args) => {
       // 실행할 함수(setTimeout())를 취소
+      setHandleLoading(true);
       clearTimeout(timer);
 
       // delay가 지나면 callback 함수를 실행
-      timer = setTimeout(() => callback(...args), delay);
+      timer = setTimeout(() => {
+        setHandleLoading(false);
+        console.log(handleLoading);
+        return callback(...args);
+      }, delay);
     };
   };
 
@@ -79,7 +86,7 @@ const Main = () => {
         </div>
         <button onClick={searchClick}>검색</button>
       </Search>
-      <RecommendedSearch selected={selected} />
+      <RecommendedSearch selected={selected} handleLoading={handleLoading}/>
     </MainStyle>
   );
 };
