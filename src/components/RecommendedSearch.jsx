@@ -2,12 +2,13 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { IoIosSearch } from 'react-icons/io';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Recommend = styled.p`
   font-size: 12px;
   font-weight: bold;
   color: #919191;
-  margin-bottom: 10px;
+  margin-bottom: ${props => (props.handleLoading ? '0px' : '10px')};
 `;
 
 const SearchResultList = styled.div`
@@ -34,12 +35,16 @@ const SearchResultList = styled.div`
   }
 `;
 
-function RecommendedSearch() {
+function RecommendedSearch({ handleLoading }) {
   const { items } = useSelector(state => state.searchReducer);
 
   return (
     <>
-      {items.length === 0 ? null : (
+      {handleLoading ? (
+        <SearchResultList>
+          <Recommend handleLoading={handleLoading}>검색 중..</Recommend>
+        </SearchResultList>
+      ) : items.length === 0 ? null : (
         <SearchResultList>
           <Recommend>추천 검색어</Recommend>
           <ul>
@@ -55,5 +60,9 @@ function RecommendedSearch() {
     </>
   );
 }
+
+RecommendedSearch.propTypes = {
+  handleLoading: PropTypes.bool,
+};
 
 export default RecommendedSearch;

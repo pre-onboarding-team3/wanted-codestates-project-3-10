@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { IoIosSearch } from 'react-icons/io';
 import { search, keyDown } from '../actions/index';
@@ -10,6 +10,8 @@ const Main = () => {
   const { keyword } = useSelector(state => state.keyDownReducer);
   const { REACT_APP_SEARCH_API } = process.env;
   const dispatch = useDispatch();
+
+  const [handleLoading, setHandleLoading] = useState(false);
 
   const writeSearchWord = async e => {
     //Todo : value에 공백이 추가된것도 같게본다. ex) '공   '와 '공' 전부
@@ -37,10 +39,15 @@ const Main = () => {
     let timer;
     return (...args) => {
       // 실행할 함수(setTimeout())를 취소
+      setHandleLoading(true);
       clearTimeout(timer);
 
       // delay가 지나면 callback 함수를 실행
-      timer = setTimeout(() => callback(...args), delay);
+      timer = setTimeout(() => {
+        setHandleLoading(false);
+        console.log(handleLoading);
+        return callback(...args);
+      }, delay);
     };
   };
 
@@ -66,7 +73,7 @@ const Main = () => {
         <div>
           <IoIosSearch color="#000" size="23px" />
           <input
-            onChange={debounce(writeSearchWord, 400)}
+            onChange={debounce(writeSearchWord, 800)}
             // onChange={writeSearchWord}
             type="text"
             onKeyPress={pressEnter}
@@ -75,7 +82,7 @@ const Main = () => {
         </div>
         <button onClick={searchClick}>검색</button>
       </Search>
-      <RecommendedSearch />
+      <RecommendedSearch handleLoading={handleLoading} />
     </MainStyle>
   );
 };
