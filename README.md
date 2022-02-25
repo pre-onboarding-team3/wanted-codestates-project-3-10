@@ -43,6 +43,8 @@ $ npm run start
 - 검색 + 검색어 추천 (검색어가 없거나, 검색 진행 중에 '검색 중' 표시)
 
   7개의 상위 키워드가 추천되도록 구현했습니다.
+  
+  api는 .env 파일에서 관리함으로 레포지토리에 올라가지 않도록 했습니다.
 
   ![질환명 검색](https://user-images.githubusercontent.com/82519180/155655116-c3bf92aa-4a5c-4c87-ab80-7fd9def0963e.gif)
 
