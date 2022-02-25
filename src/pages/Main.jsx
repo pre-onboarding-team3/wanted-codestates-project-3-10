@@ -6,11 +6,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import RecommendedSearch from '../components/RecommendedSearch';
 import axios from 'axios';
 
-const API =
-  'https://api.clinicaltrialskorea.com/api/v1/search-conditions/?name=';
-
 const Main = () => {
   const { keyword } = useSelector(state => state.keyDownReducer);
+  const { REACT_APP_SEARCH_API } = process.env;
   const dispatch = useDispatch();
 
   const writeSearchWord = async e => {
@@ -25,7 +23,7 @@ const Main = () => {
     }
     // 없을 때 axios API 호출 => 세션 스토리 저장
     else if (value) {
-      const URL = API + value;
+      const URL = REACT_APP_SEARCH_API + value;
       const items = await axios.get(URL);
       sessionStorage.setItem(value, JSON.stringify(items.data.slice(0, 7)));
       dispatch(search(items.data.slice(0, 7)));
