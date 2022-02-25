@@ -5,11 +5,53 @@ import { IoIosSearch } from 'react-icons/io';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
+function RecommendedSearch({ selected, searchClick, handleLoading }) {
+  const { keyword } = useSelector(state => state.keyDownReducer);
+  const { items } = useSelector(state => state.searchReducer);
+  const dispatch = useDispatch();
+
+  const clickKeyword = (e) => {
+    dispatch(keyDown(e.target.textContent))
+    searchClick(e.target.textContent);
+  }
+
+  return (
+    <>
+      {handleLoading ? (
+        <SearchResultList>
+          <Recommend>검색 중..</Recommend>
+        </SearchResultList>
+      ) : items.length > 0 ? (
+        <SearchResultList>
+          <Recommend>추천 검색어</Recommend>
+          <ul>
+            {items.map((item, index) => (
+              <li
+                key={index}
+                className={index === selected ? 'selected' : ''}
+                tabIndex="0"
+                onClick={clickKeyword}
+              >
+                <IoIosSearch color="black" size="20px" />
+                <p>{item.name}</p>
+              </li>
+            ))}
+          </ul>
+        </SearchResultList>
+      )
+        : keyword === '' ? null :
+          <SearchResultList>
+            <Recommend>검색어 없음</Recommend>
+          </SearchResultList>
+      }
+    </>
+  )
+}
+
 const Recommend = styled.p`
   font-size: 12px;
   font-weight: bold;
   color: #919191;
-  margin-bottom: ${props => (props.handleLoading ? '0px' : '10px')};
 `;
 
 const SearchResultList = styled.div`
@@ -30,7 +72,9 @@ const SearchResultList = styled.div`
       &.selected {
         background-color: #eee;
       }
-
+      :first-child {
+        margin-top: 10px;
+      }
       :hover {
         cursor: pointer;
         background-color: #eee;
@@ -42,44 +86,6 @@ const SearchResultList = styled.div`
     }
   }
 `;
-
-
-function RecommendedSearch({ selected, searchClick, handleLoading }) {
-  const { items } = useSelector(state => state.searchReducer);
-  const dispatch = useDispatch();
-
-  const clickKeyword = (e) => {
-    dispatch(keyDown(e.target.textContent))
-    searchClick(e.target.textContent);
-  }
-
-  return (
-    <>
-      {handleLoading ? (
-        <SearchResultList>
-          <Recommend handleLoading={handleLoading}>검색 중..</Recommend>
-        </SearchResultList>
-      ) : items.length === 0 ? null : (
-        <SearchResultList>
-          <Recommend>추천 검색어</Recommend>
-          <ul>
-            {items.map((item, index) => (
-              <li
-                key={index}
-                className={index === selected ? 'selected' : ''}
-                tabIndex="0"
-                onClick={clickKeyword}
-              >
-                <IoIosSearch color="black" size="20px" />
-                <p>{item.name}</p>
-              </li>
-            ))}
-          </ul>
-        </SearchResultList>
-      )}
-    </>
-  );
-}
 
 RecommendedSearch.propTypes = {
   handleLoading: PropTypes.bool,
