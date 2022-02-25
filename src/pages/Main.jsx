@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { IoIosSearch } from 'react-icons/io';
 import { search, keyDown } from '../actions/index';
@@ -8,6 +8,8 @@ import axios from 'axios';
 
 const Main = () => {
   const { keyword } = useSelector(state => state.keyDownReducer);
+  const { items } = useSelector(state => state.searchReducer);
+  const inputRef = useRef();
   const { REACT_APP_SEARCH_API } = process.env;
   const [selected, setSelected] = useState(-1);
   const dispatch = useDispatch();
@@ -18,6 +20,7 @@ const Main = () => {
     //Todo : value에 공백이 추가된것도 같게본다. ex) '공   '와 '공' 전부
     const value = e.target.value.replace(/\s+$/gm, '');
     if (value === '') {
+      setSelected(-1);
       dispatch(search([]));
     }
     // 캐시가 있을 때, 캐시 사용
@@ -46,7 +49,6 @@ const Main = () => {
       // delay가 지나면 callback 함수를 실행
       timer = setTimeout(() => {
         setHandleLoading(false);
-        console.log(handleLoading);
         return callback(...args);
       }, delay);
     };
@@ -54,7 +56,9 @@ const Main = () => {
 
   const pressKey = ({ key }) => {
     if (key === 'Enter') {
-      searchClick();
+      inputRef.current.value = items[selected] ? items[selected].name : keyword
+      dispatch(keyDown(inputRef.current.value))     
+      searchClick(inputRef.current.value);
     } else if (key === 'ArrowDown') {
       setSelected((selected + 1) % 7);
     } else if (key === 'ArrowUp') {
@@ -62,10 +66,10 @@ const Main = () => {
     }
   };
 
-  const searchClick = () => {
-    if (!keyword) return;
+  const searchClick = (word=keyword) => {    
+    if (!word) return;
     location.replace(
-      `https://clinicaltrialskorea.com/studies?condition=${keyword}`,
+      `https://clinicaltrialskorea.com/studies?condition=${word}`,
     );
   };
 
@@ -79,6 +83,7 @@ const Main = () => {
           <IoIosSearch color="#000" size="23px" />
           <input
             onChange={debounce(writeSearchWord, 400)}
+            ref={inputRef}
             type="text"
             onKeyDown={pressKey}
             placeholder="질환명을 입력해 주세요."
@@ -86,7 +91,11 @@ const Main = () => {
         </div>
         <button onClick={searchClick}>검색</button>
       </Search>
-      <RecommendedSearch selected={selected} handleLoading={handleLoading}/>
+      <RecommendedSearch
+        searchClick={searchClick}
+        selected={selected}
+        handleLoading={handleLoading}
+      />
     </MainStyle>
   );
 };
