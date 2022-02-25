@@ -19,12 +19,26 @@ const Main = () => {
     // action type 따라 분기를 나눈다.
     // 캐시가 있을 때, 캐시 사용
     // 없을 때 axios API 호출 => 세션 스토리 저장
+
     if (e.target.value) {
       const URL = API + e.target.value;
       const items = await axios.get(URL);
       dispatch(search(items.data.slice(0, 7)));
     }
     setSearchWord(input.current.value);
+  };
+
+  const debounce = (callback, delay) => {
+    // callback => 일정 시간이 지난 후 실행되는 함수
+    // delay => 지연 시간
+    let timer;
+    return (...args) => {
+      // 실행할 함수(setTimeout())를 취소
+      clearTimeout(timer);
+
+      // delay가 지나면 callback 함수를 실행
+      timer = setTimeout(() => callback(...args), delay);
+    };
   };
 
   const pressEnter = e => {
@@ -49,8 +63,10 @@ const Main = () => {
         <div>
           <IoIosSearch color="#000" size="23px" />
           <input
+            id="input"
             ref={input}
-            onChange={writeSearchWord}
+            onChange={debounce(writeSearchWord, 400)}
+            // onChange={writeSearchWord}
             type="text"
             onFocus={() => setFocusInput(true)}
             onBlur={() => setFocusInput(false)}
