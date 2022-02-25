@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { IoIosSearch } from 'react-icons/io';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Recommend = styled.p`
   font-size: 12px;
@@ -28,14 +29,24 @@ const SearchResultList = styled.div`
         margin-left: 10px;
       }
       :last-child {
-        padding: 10px 0 0;
+        padding: 10px 0;
       }
-    }
+      :hover {
+        cursor: pointer;
+        background-color: #eee;
+      }
+    }    
   }
 `;
 
-function RecommendedSearch() {
+const RecommendedSearch = ({ selected }) => {
   const { items } = useSelector(state => state.searchReducer);
+  console.log(items)
+  console.log(selected)
+
+  const clickKeyword = () => {
+
+  }
 
   return (
     <>
@@ -44,7 +55,7 @@ function RecommendedSearch() {
           <Recommend>추천 검색어</Recommend>
           <ul>
             {items.map((item, index) => (
-              <li key={index}>
+              <li key={index} onClick={clickKeyword}>
                 <IoIosSearch color="black" size="20px" />
                 <span>{item.name}</span>
               </li>
@@ -54,6 +65,10 @@ function RecommendedSearch() {
       )}
     </>
   );
+}
+
+RecommendedSearch.prototype = {
+  selected: PropTypes.number,
 }
 
 export default RecommendedSearch;

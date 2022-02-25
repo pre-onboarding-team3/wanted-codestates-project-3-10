@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { IoIosSearch } from 'react-icons/io';
 import { search, keyDown } from '../actions/index';
@@ -11,6 +11,9 @@ const API =
 
 const Main = () => {
   const { keyword } = useSelector(state => state.keyDownReducer);
+  // const { items } = useSelector(state => state.searchReducer);
+  const inputRef = useRef();
+  const [currentIdx, setCurrentIdx] = useState(-1);
   const dispatch = useDispatch();
 
   const writeSearchWord = async e => {
@@ -69,7 +72,7 @@ const Main = () => {
           <IoIosSearch color="#000" size="23px" />
           <input
             onChange={debounce(writeSearchWord, 400)}
-            // onChange={writeSearchWord}
+            ref={inputRef}
             type="text"
             onKeyPress={pressEnter}
             placeholder="질환명을 입력해 주세요."
@@ -77,7 +80,7 @@ const Main = () => {
         </div>
         <button onClick={searchClick}>검색</button>
       </Search>
-      <RecommendedSearch />
+      <RecommendedSearch selected={selected} />
     </MainStyle>
   );
 };
