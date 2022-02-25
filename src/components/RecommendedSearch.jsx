@@ -47,7 +47,11 @@ function RecommendedSearch({ selected }) {
           <Recommend>추천 검색어</Recommend>
           <ul>
             {items.map((item, index) => (
-              <li key={index} className={index === selected ? 'selected' : ''}>
+              <li
+                key={index}
+                className={index === selected ? 'selected' : ''}
+                tabIndex="0"
+              >
                 <IoIosSearch color="black" size="20px" />
                 <span>{item.name}</span>
               </li>
