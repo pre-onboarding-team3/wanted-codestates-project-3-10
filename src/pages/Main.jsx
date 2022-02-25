@@ -49,7 +49,6 @@ const Main = () => {
       // delay가 지나면 callback 함수를 실행
       timer = setTimeout(() => {
         setHandleLoading(false);
-        console.log(handleLoading);
         return callback(...args);
       }, delay);
     };

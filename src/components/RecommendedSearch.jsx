@@ -50,7 +50,7 @@ function RecommendedSearch({ selected, searchClick, handleLoading }) {
 
   const clickKeyword = (e) => {
     dispatch(keyDown(e.target.textContent))
-    searchClick(e.target.textContent);  
+    searchClick(e.target.textContent);
   }
 
   return (
@@ -67,7 +67,7 @@ function RecommendedSearch({ selected, searchClick, handleLoading }) {
               <li
                 key={index}
                 className={index === selected ? 'selected' : ''}
-                tabIndex="0"    
+                tabIndex="0"
                 onClick={clickKeyword}
               >
                 <IoIosSearch color="black" size="20px" />
