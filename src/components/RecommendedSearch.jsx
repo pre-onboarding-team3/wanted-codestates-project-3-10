@@ -1,5 +1,6 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { keyDown } from '../actions/index';
 import { IoIosSearch } from 'react-icons/io';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -27,7 +28,7 @@ const SearchResultList = styled.div`
       padding: 10px 0;
 
       &.selected {
-        background-color: #ddd;
+        background-color: #eee;
       }
 
       :hover {
@@ -35,20 +36,22 @@ const SearchResultList = styled.div`
         background-color: #eee;
       }
 
-      span {
+      p {
         margin-left: 10px;
       }
     }
   }
 `;
 
-function RecommendedSearch({ selected }) {
+function RecommendedSearch({ selected, searchClick }) {
   const { items } = useSelector(state => state.searchReducer);
-  console.log(items)
-  console.log(selected)
+  const dispatch = useDispatch();
 
-  const clickKeyword = () => {
-
+  const clickKeyword = (e) => {
+    dispatch(keyDown(e.target.textContent))
+    searchClick(e.target.textContent);    
+    // console.log(e.target.textContent, searchClick)
+    // console.log('클릭됨', e.target.value)
   }
 
   return (
@@ -61,10 +64,11 @@ function RecommendedSearch({ selected }) {
               <li
                 key={index}
                 className={index === selected ? 'selected' : ''}
-                tabIndex="0"
+                tabIndex="0"    
+                onClick={clickKeyword}
               >
                 <IoIosSearch color="black" size="20px" />
-                <span>{item.name}</span>
+                <p>{item.name}</p>
               </li>
             ))}
           </ul>
@@ -76,6 +80,7 @@ function RecommendedSearch({ selected }) {
 
 RecommendedSearch.propTypes = {
   selected: PropTypes.number,
+  searchClick: PropTypes.func,
 };
 
 export default RecommendedSearch;

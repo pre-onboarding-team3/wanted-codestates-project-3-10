@@ -50,7 +50,9 @@ const Main = () => {
 
   const pressKey = ({ key }) => {
     if (key === 'Enter') {
-      searchClick();
+      inputRef.current.value = items[selected] ? items[selected].name : keyword
+      dispatch(keyDown(inputRef.current.value))     
+      searchClick(inputRef.current.value);
     } else if (key === 'ArrowDown') {
       setSelected((selected + 1) % 7);
     } else if (key === 'ArrowUp') {
@@ -58,10 +60,10 @@ const Main = () => {
     }
   };
 
-  const searchClick = () => {
-    if (!keyword) return;
+  const searchClick = (word=keyword) => {    
+    if (!word) return;
     location.replace(
-      `https://clinicaltrialskorea.com/studies?condition=${keyword}`,
+      `https://clinicaltrialskorea.com/studies?condition=${word}`,
     );
   };
 
@@ -78,13 +80,12 @@ const Main = () => {
             ref={inputRef}
             type="text"
             onKeyDown={pressKey}
-            onClick={clickKeyword}
             placeholder="질환명을 입력해 주세요."
           />
         </div>
         <button onClick={searchClick}>검색</button>
       </Search>
-      <RecommendedSearch selected={selected} />
+      <RecommendedSearch searchClick={searchClick} selected={selected} />
     </MainStyle>
   );
 };
