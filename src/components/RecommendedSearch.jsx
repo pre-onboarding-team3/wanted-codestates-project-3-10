@@ -61,7 +61,7 @@ function RecommendedSearch({ selected }) {
               <li
                 key={index}
                 className={index === selected ? 'selected' : ''}
-                onClick={clickKeyword}
+                tabIndex="0"
               >
                 <IoIosSearch color="black" size="20px" />
                 <span>{item.name}</span>

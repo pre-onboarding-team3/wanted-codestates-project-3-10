@@ -18,6 +18,7 @@ const Main = () => {
     //Todo : value에 공백이 추가된것도 같게본다. ex) '공   '와 '공' 전부
     const value = e.target.value.replace(/\s+$/gm, '');
     if (value === '') {
+      setSelected(-1);
       dispatch(search([]));
     }
     // 캐시가 있을 때, 캐시 사용
@@ -77,6 +78,7 @@ const Main = () => {
             ref={inputRef}
             type="text"
             onKeyDown={pressKey}
+            onClick={clickKeyword}
             placeholder="질환명을 입력해 주세요."
           />
         </div>
