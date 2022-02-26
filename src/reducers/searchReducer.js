@@ -1,9 +1,9 @@
-import { SEARCH } from '../actions';
+import { STORE_ITEMS } from '../actions';
 import { initialState } from './initialState';
 
 const searchReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SEARCH: {
+    case STORE_ITEMS: {
       return {
         ...state,
         items: action.payload.items,

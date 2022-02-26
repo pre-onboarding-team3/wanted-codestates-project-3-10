@@ -1,16 +1,14 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { IoIosSearch } from 'react-icons/io';
-import { search, keyDown } from '../actions/index';
+import { storeItems, search, keyDown } from '../actions/index';
 import { useSelector, useDispatch } from 'react-redux';
 import RecommendedSearch from '../components/RecommendedSearch';
-import axios from 'axios';
 
 const Main = () => {
   const { keyword } = useSelector(state => state.keyDownReducer);
   const { items } = useSelector(state => state.searchReducer);
   const inputRef = useRef();
-  const { REACT_APP_SEARCH_API } = process.env;
   const [selected, setSelected] = useState(-1);
   const dispatch = useDispatch();
 
@@ -21,18 +19,15 @@ const Main = () => {
     const value = e.target.value.replace(/\s+$/gm, '');
     if (value === '') {
       setSelected(-1);
-      dispatch(search([]));
+      dispatch(storeItems([]));
     }
     // 캐시가 있을 때, 캐시 사용
     else if (sessionStorage.getItem(value)) {
-      dispatch(search(JSON.parse(sessionStorage.getItem(value))));
+      dispatch(storeItems(JSON.parse(sessionStorage.getItem(value))));
     }
     // 없을 때 axios API 호출 => 세션 스토리 저장
     else if (value) {
-      const URL = REACT_APP_SEARCH_API + value;
-      const items = await axios.get(URL);
-      sessionStorage.setItem(value, JSON.stringify(items.data.slice(0, 7)));
-      dispatch(search(items.data.slice(0, 7)));
+      dispatch(search(value));
     }
     dispatch(keyDown(value));
   };
@@ -56,8 +51,8 @@ const Main = () => {
 
   const pressKey = ({ key }) => {
     if (key === 'Enter') {
-      inputRef.current.value = items[selected] ? items[selected].name : keyword
-      dispatch(keyDown(inputRef.current.value))     
+      inputRef.current.value = items[selected] ? items[selected].name : keyword;
+      dispatch(keyDown(inputRef.current.value));
       searchClick(inputRef.current.value);
     } else if (key === 'ArrowDown') {
       setSelected((selected + 1) % 7);
@@ -66,7 +61,7 @@ const Main = () => {
     }
   };
 
-  const searchClick = (word=keyword) => {    
+  const searchClick = (word = keyword) => {
     if (!word) return;
     location.replace(
       `https://clinicaltrialskorea.com/studies?condition=${word}`,
