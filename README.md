@@ -2,7 +2,7 @@
 
 ## 🚀 배포 링크
 
-https://dreamy-johnson-da4b64.netlify.app/
+https://wanted-preonboarding-team3-humanscape.netlify.app/
 
 ## 💿 실행 방법
 
